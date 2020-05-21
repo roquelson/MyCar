@@ -13,8 +13,37 @@
 
     form,
     table {
+      float: left;
+      width: 50%;
 
-      margin: 30px 0px 0px 30px
+    }
+
+    form {
+      border: 2px solid black;
+      padding: 10px;
+      margin-top: 30px;
+      margin-right: 50px;
+      background: #FFFFFF;
+      width: 600px;
+
+    }
+
+    table {
+      border: 2px solid black;
+
+    }
+
+    td {
+      padding: 10px 20px 10px 10px;
+
+
+    }
+
+    th {
+
+      padding: 10px 20px 10px 10px;
+
+
     }
 
 
@@ -22,8 +51,8 @@
     #conteudo-principal {
       background: #FFFFFF;
       padding: 10px;
+      margin-top: 30px;
       width: 600px;
-      margin: 30px auto;
     }
 
     #header {
@@ -40,13 +69,20 @@
     .button {
       margin-top: 10px;
       text-align: center;
-      background-color: green;
+      color: white;
+      background-color: black;
+      border-radius: 8px;
+      font-size: 12px;
+      padding: 12px 28px;
     }
 
     .input {
-      width: 70%;
+      width: 95%;
+      padding: 8px 12px;
       margin-top: 10px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: 1px solid black;
     }
 
     #botao {
@@ -55,6 +91,7 @@
 
     #formTitle {
       text-align: center;
+      color: #FFFFFF;
 
     }
   </style>
@@ -66,32 +103,32 @@
     <h1 data-js="CompanyName"></h1>
     Telefone:<span data-js="telefone"></span>
   </div>
-  <div id="conteudo-principal">
-    <h1 id="formTitle">Cadastro</h1>
-    <form>
-      Imagem:<br>
-      <input class="input" type="text" placeholder="Url da imagem" data-js="image"><br>
-      Marca e modelo<br>
-      <input class="input" type="text" data-js="model"><br>
-      Ano:<br>
-      <input class="input" type="text" data-js="year"><br>
-      Placa:<br>
-      <input class="input" type="text" data-js="plate"><br>
-      Cor:<br>
-      <input class="input" type="text" data-js="color"><br>
-      <div id="botao">
 
-        <button class="button" type="submit" data-js="register">Cadastrar</button>
-      </div>
-    </form>
-  </div>
-  <table border="1" class="table" data-js="table">
+  <h1 id="formTitle">Cadastro</h1>
+  <form data-js="registerCars">
+    <strong>Imagem:</strong><br>
+    <input class="input" type="text" placeholder="Url da imagem" data-js="image"><br>
+    <strong>Marca/modelo:</strong> <br>
+    <input class="input" type="text" data-js="model"><br>
+    <strong>Ano:</strong><br>
+    <input class="input" type="text" data-js="year"><br>
+    <strong>Placa:</strong><br>
+    <input class="input" type="text" data-js="plate"><br>
+    <strong>Cor:</strong><br>
+    <input class="input" type="text" data-js="color"><br>
+    <div id="botao">
+      <input class="button" type="submit" data-js="register" value="Cadastrar"></button>
+    </div>
+  </form>
+
+  <table class="table" data-js="table">
     <tr>
       <th>Imagem</th>
       <th>Modelo</th>
       <th>Ano</th>
       <th>Placa</th>
       <th>Cor</th>
+      <th>Cancelar</th>
     </tr>
 
   </table>

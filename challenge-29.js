@@ -56,7 +56,7 @@
           var $telephone = new DOM('[data-js="telefone"]');
           var resposta = JSON.parse(this.responseText);
           $companyName.get().innerHTML = resposta.name;
-          $telephone.get().textContent = resposta.phone;
+          $telephone.get().innerHTML = '<strong>' + resposta.phone + '</strong>';
         }
       },
 
@@ -94,14 +94,31 @@
           $td.innerHTML = item;
           $tr.appendChild($td);
           $table.get().appendChild($tr);
+        });
+        var $buttonCancel = document.createElement('button');
+        app.setButtonDelete($buttonCancel);
+        $buttonCancel.addEventListener('click', function () {
+          $table.get().deleteRow($tr.rowIndex);
         })
+        $tr.appendChild($buttonCancel);
+        $table.get().appendChild($tr);
+      },
+      setButtonDelete: function setButtonDelete(buttonElement) {
+        buttonElement.innerHTML = "Deletar"
+        buttonElement.style.marginTop = "50px";
+        buttonElement.style.padding = "12px 28px"
+        buttonElement.style.color = "white"
+        buttonElement.style.backgroundColor = "black"
+        buttonElement.style.borderRadius = "8px"
+
       },
 
       setImageProperties: function setImageProperties(imgElement, url) {
         imgElement.setAttribute("height", "auto");
         imgElement.setAttribute("width", "200");
         imgElement.setAttribute("src", url);
-      }
+      },
+
     }
   })();
   app.init();
