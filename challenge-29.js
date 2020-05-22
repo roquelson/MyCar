@@ -26,7 +26,7 @@
   Dê um nome para a empresa e um telefone fictício, preechendo essas informações
   no arquivo company.json que já está criado.
 
-  Essas informações devem ser adicionadas no HTML via Ajax.
+  Essas informações devem ser adicionadas no HTML via get.
 
   Parte técnica:
   Separe o nosso módulo de DOM criado nas últimas aulas em
@@ -37,20 +37,27 @@
   */
   var app = (function () {
     return {
+
       init: function init() {
         this.companyInfo();
         this.initEvents();
+        this.initTable();
+      },
+
+      initTable: function iniTable() {
+        this.getRequest("http://localhost:3000/car", this.fillTable);
+      },
+
+      initEvents: function initEvents() {
+        var $register = new DOM('[data-js="register"]');
+        $register.on('click', app.regiterCars);
       },
 
       companyInfo: function companyInfo() {
-        var ajax = new XMLHttpRequest();
-        ajax.open('GET', "company.json", true);
-        ajax.send();
-        ajax.addEventListener("readystatechange", this.getCompanyInfo, false);
+        this.getRequest("company.json", this.getCompanyInfo);
       },
 
       getCompanyInfo: function getCompanyInfo() {
-
         if (app.isReady.call(this)) {
           var $companyName = new DOM('[data-js="CompanyName"]');
           var $telephone = new DOM('[data-js="telefone"]');
@@ -60,49 +67,98 @@
         }
       },
 
+      getRequest: function getRequest(url, callback) {
+        var get = new XMLHttpRequest();
+        get.open('GET', url, true);
+        get.send();
+        get.addEventListener("readystatechange", callback, false);
+      },
+
+      postRequest: function postRequest(message) {
+        var post = new XMLHttpRequest();
+        post.open('POST', 'http://localhost:3000/car');
+        post.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        post.send(message);
+        if (post.readyState === 4) {
+          console.log('Carro Cadastrado')
+        }
+      },
+
       isReady: function isReady() {
         return this.readyState === 4 && this.status === 200;
       },
 
-      initEvents: function initEvents() {
-        var $register = new DOM('[data-js="register"]');
-        $register.on('click', app.regiterCars);
-      },
-
       regiterCars: function registerCars(event) {
+
         var $model = new DOM('[data-js="model"]');
         var $year = new DOM('[data-js="year"]');
         var $plate = new DOM('[data-js="plate"]');
         var $color = new DOM('[data-js="color"]');
+        var $image = new DOM('[data-js="image"]');
+
+        app.postRequest(`image=${$image.get().value}&brandModel=${$model.get().value}
+        &year=${ $year.get().value}&plate=${$plate.get().value}&color=${$color.get().value})`)
         event.preventDefault();
         app.callTable($model.get().value, $year.get().value,
           $plate.get().value, $color.get().value);
+
+        $image.get().value = '';
+        $model.get().value = '';
+        $year.get().value = '';
+        $plate.get().value = '';
+        $color.get().value = '';
+
+
+      },
+
+      getImagePath: function getImagePath(path) {
+        var $image = new DOM('[data-js="image"]');
+
+        if (path)
+          return $image.get().value = path;
+        return $image.get().value;
       },
 
       callTable: function callTable() {
-        var $image = new DOM('[data-js="image"]');
         var $table = new DOM('[data-js="table"]');
         var $ImagePath = document.createElement("img");
         var $tr = document.createElement('tr');
         var $td = document.createElement('td');
-        this.setImageProperties($ImagePath, $image.get().value);
+        var $buttonCancel = document.createElement('button');
+
+        this.setImageProperties($ImagePath, this.getImagePath());
         $td.appendChild($ImagePath);
         $tr.appendChild($td);
         $table.get().appendChild($tr);
+
         Array.prototype.forEach.call(arguments, function (item) {
           $td = document.createElement('td');
           $td.innerHTML = item;
           $tr.appendChild($td);
           $table.get().appendChild($tr);
         });
-        var $buttonCancel = document.createElement('button');
+
         app.setButtonDelete($buttonCancel);
+
         $buttonCancel.addEventListener('click', function () {
           $table.get().deleteRow($tr.rowIndex);
         })
+
         $tr.appendChild($buttonCancel);
         $table.get().appendChild($tr);
       },
+
+      fillTable: function fillTable() {
+        if (app.isReady.call(this)) {
+          var resposta = JSON.parse(this.responseText);
+
+          Array.prototype.forEach.call(resposta, function (item) {
+            app.getImagePath(item.image);
+            app.callTable(item.brandModel, item.year, item.plate, item.color);
+          })
+        }
+      },
+
       setButtonDelete: function setButtonDelete(buttonElement) {
         buttonElement.innerHTML = "Deletar"
         buttonElement.style.marginTop = "50px";
